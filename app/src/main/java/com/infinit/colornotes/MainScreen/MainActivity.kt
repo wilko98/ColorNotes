@@ -1,4 +1,4 @@
-package com.infinit.colornotes.ui.main
+package com.infinit.colornotes.MainScreen
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

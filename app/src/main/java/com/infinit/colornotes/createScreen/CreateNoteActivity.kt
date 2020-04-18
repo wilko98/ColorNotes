@@ -4,10 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
-import com.infinit.colornotes.ui.main.MainActivity
 import com.infinit.colornotes.R
 import com.infinit.colornotes.model.Note
-import com.infinit.colornotes.ui.main.MainViewModel
+import com.infinit.colornotes.MainScreen.MainViewModel
 import kotlinx.android.synthetic.main.activity_create_note.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.koin.android.ext.android.inject

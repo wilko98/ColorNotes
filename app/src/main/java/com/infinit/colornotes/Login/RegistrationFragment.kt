@@ -10,10 +10,9 @@ import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import com.infinit.colornotes.R
 import com.infinit.colornotes.model.Credentials
-import com.infinit.colornotes.ui.main.MainActivity
-import com.infinit.colornotes.ui.main.MainViewModel
+import com.infinit.colornotes.MainScreen.MainActivity
+import com.infinit.colornotes.MainScreen.MainViewModel
 import com.infinit.colornotes.utils.PrefManager
-import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_login.btnRegistration
 import kotlinx.android.synthetic.main.fragment_login.emailAddressEditText
 import kotlinx.android.synthetic.main.fragment_registration.*

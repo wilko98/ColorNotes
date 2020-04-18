@@ -1,4 +1,4 @@
-package com.infinit.colornotes.ui.main
+package com.infinit.colornotes.MainScreen
 
 import android.view.LayoutInflater
 import android.view.View

@@ -1,9 +1,8 @@
-package com.infinit.colornotes.ui.main
+package com.infinit.colornotes.MainScreen
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.infinit.colornotes.di.Api
-import com.infinit.colornotes.di.Value
 import com.infinit.colornotes.di.idModel
 import com.infinit.colornotes.model.Credentials
 import com.infinit.colornotes.model.LoginResponse

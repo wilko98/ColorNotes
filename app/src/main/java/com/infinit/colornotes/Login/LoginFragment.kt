@@ -1,7 +1,6 @@
 package com.infinit.colornotes.Login
 
 import android.content.Intent
-import android.hardware.fingerprint.FingerprintManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,15 +10,21 @@ import androidx.core.hardware.fingerprint.FingerprintManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
+import com.infinit.colornotes.BuildConfig
 import com.infinit.colornotes.R
+import com.infinit.colornotes.base.OnlineUsersWebSocketListener
+import com.infinit.colornotes.base.OnlineUsersWebSocketView
 import com.infinit.colornotes.model.Credentials
-import com.infinit.colornotes.ui.main.MainActivity
-import com.infinit.colornotes.ui.main.MainViewModel
+import com.infinit.colornotes.MainScreen.MainActivity
+import com.infinit.colornotes.MainScreen.MainViewModel
 import com.infinit.colornotes.utils.PrefManager
 import kotlinx.android.synthetic.main.fragment_login.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.WebSocket
 import org.koin.android.ext.android.inject
 
-class LoginFragment : Fragment(),AuthCallBack {
+class LoginFragment : Fragment(),AuthCallBack,OnlineUsersWebSocketView {
 
     companion object{
         fun newInstance():LoginFragment{
@@ -29,6 +34,10 @@ class LoginFragment : Fragment(),AuthCallBack {
 
     private val viewModel: MainViewModel by inject()
     private val prefManager: PrefManager by inject()
+    private val client: OkHttpClient by inject()
+
+    private lateinit var echoWebSocketListener :OnlineUsersWebSocketListener
+    private lateinit var ws: WebSocket
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,6 +46,9 @@ class LoginFragment : Fragment(),AuthCallBack {
     ): View = inflater.inflate(R.layout.fragment_login,container,false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        echoWebSocketListener = OnlineUsersWebSocketListener(this)
+        startWebSocket()
 
         if (FingerprintManagerCompat.from(requireContext()).hasEnrolledFingerprints()) {
             imgFinger.visibility = View.VISIBLE
@@ -55,6 +67,10 @@ class LoginFragment : Fragment(),AuthCallBack {
             (activity as LoginActivity).showRegistration()
         }
 
+        webSocketButton.setOnClickListener {
+            ws.send(socketET.text.toString())
+        }
+
         viewModel.loginResponseLiveData.observe(this, Observer {
             loginButton.visibility = View.VISIBLE
             progressBar.visibility = View.GONE
@@ -68,6 +84,12 @@ class LoginFragment : Fragment(),AuthCallBack {
                 startActivity(intent)
             }
         })
+    }
+
+    fun startWebSocket(){
+        val request = Request.Builder().url("${BuildConfig.API_URL}api/usersOnline").build()
+        ws = client.newWebSocket(request, echoWebSocketListener)
+        client.dispatcher.executorService.shutdown()
     }
 
     fun showFingerprintDialog(){
@@ -86,5 +108,11 @@ class LoginFragment : Fragment(),AuthCallBack {
 
     override fun onError() {
         showMessage("Fingerprints not match")
+    }
+
+    override fun showOnlineUsers(text: String) {
+        activity?.runOnUiThread {
+            onlineUsersTextView.text = text
+        }
     }
 }
